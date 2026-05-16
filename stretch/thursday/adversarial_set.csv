@@ -1,4 +1,31 @@
 id,hypothesis_category,text,expected_label,rationale
-1,negation,The latest update did not improve battery life at all.,negative,Tests whether the model picks up the negation cue or just the trigger word 'improve'
-2,lexical_trigger,This app is no longer reliable on my phone.,negative,Strong positive cue 'reliable' negated by 'no longer'; tests cue-vs-context handling
-3,domain_shift,The team won the championship final last weekend.,neutral,Sports content unrelated to app-review training; tests domain-shift robustness
+1,negation,The latest update did not improve battery life at all.,negative,Tests whether the model picks up the negation cue or just the trigger word improve
+2,lexical_trigger,This app is no longer reliable on my phone.,negative,Strong positive cue reliable negated by no longer tests cue vs context handling
+3,domain_shift,The team won the championship final last weekend.,neutral,Sports content unrelated to app review training tests domain shift robustness
+4,negation,I cannot say this patch is stable or usable.,negative,Tests whether the model locks onto positive attributes like stable and usable while ignoring negation
+5,negation,The app fails to support basic features I actually need.,negative,Probes if the model flags support as positive and misses the critical failure verb fails to
+6,negation,Never helps me organize my tasks properly.,negative,Tests if the positive tokens helps and organize dominate the final attention weights over Never
+7,negation,The recent hotfix didn't fix the crashing issue.,negative,Tests if the presence of fix tricks the model into predicting a resolution despite didn't
+8,negation,I don't love the new layout but the application speed is fine.,positive,Complex contrastive sentence where the overall sentiment remains positive due to speed is fine
+9,lexical_trigger,A perfect example of how to completely ruin an interface.,negative,Contains perfect as a strong positive lexical trigger but placed in a highly destructive context
+10,lexical_trigger,The customer support team was great at ignoring my requests.,negative,Triggers the highly positive word great right before a negative modifier to check local context
+11,lexical_trigger,It gives a wonderful feeling of pure frustration.,negative,Pairs the positive trigger token wonderful directly with the negative target noun frustration
+12,lexical_trigger,I thoroughly enjoy watching this application crash every single day.,negative,Uses enjoy as a strong positive trigger sarcastically to describe a severe technical bug
+13,lexical_trigger,There is absolutely no risk of me recommending this product.,negative,Contains highly positive tokens like recommending but flipped entirely by no risk of
+14,domain_shift,Preheat the oven to 180C and bake the mixture for twenty minutes.,neutral,Recipe domain text to probe if objective cooking descriptions trigger unexpected polarity
+15,domain_shift,The federal reserve announced a minor adjustment to benchmark interest rates.,neutral,Financial news prose completely divorced from software review terminology to evaluate default bias
+16,domain_shift,Water boils at sea level when reaching a temperature of one hundred degrees.,neutral,Pure scientific fact domain to test if objective physical laws remain safely bounded within neutral
+17,domain_shift,The director opted for an anamorphic lens to capture the wide landscape.,neutral,Cinematography prose containing technical jargon to check model stability when processing low frequency terms
+18,domain_shift,Heavy rainfall is expected across the northern valley this weekend.,neutral,Weather forecast domain to check if neutral atmospheric descriptions skew the classifier boundary
+19,length_extreme,Horrible.,negative,Extremely short single word review to check if tokenization padding sequences skew the weights
+20,length_extreme,Great app.,positive,Minimal length constraint to test model behavior on extremely brief but high intensity sentiment signals
+21,length_extreme,Trash.,negative,One word harsh critique to evaluate if the model can construct a reliable logit distribution
+22,length_extreme,I opened the app today expecting to see my updated dashboard but instead I was greeted with an endless loading spinner that completely locked my screen and forced me to restart my entire phone twice which is unacceptable given how much I pay for the premium tier subscription every single month without fail.,negative,Extremely long multi clause review packed with complaints to test long range dependency handling
+23,length_extreme,The interface design team clearly spent an immense amount of time crafting every single pixel because the navigation feels incredibly fluid and the color schemes blend together perfectly creating an experience that makes tracking my daily habits a genuine pleasure instead of a tedious chore that I usually dread doing.,positive,Extremely long positive sentence to check if the network loses track of the core sentiment over length
+24,length_extreme,This update is just bad bad bad bad bad bad bad bad bad bad bad bad bad bad bad bad.,negative,Repetitive extreme token injection to check if repeating a negative word causes logit explosion
+25,sarcasm,Oh brilliant another update that breaks all my custom configurations.,negative,Sarcastic use of brilliant to introduce an outcome that actually causes frustration and broken settings
+26,sarcasm,Thanks for deleting my history I really loved losing all my local data.,negative,Sarcastic expression of gratitude for a catastrophic system data loss event
+27,sarcasm,Don't worry the frequent disconnects add a lovely element of surprise.,negative,Sarcastic reframing of a severe connection bug as a positive feature using lovely element
+28,sarcasm,I absolutely love paying a premium subscription just to stare at a completely blank screen.,negative,Sarcastic deployment of I absolutely love paired directly with an absolute system failure
+29,sarcasm,The new features are so useful that I uninstalled the app immediately.,negative,Juxtaposes the positive adjective useful with the immediate destructive action of uninstalled
+30,sarcasm,Just what I wanted a calculator application that takes two minutes to boot up.,negative,Sarcastic alignment of user expectation with an absurdly poor performance metric
