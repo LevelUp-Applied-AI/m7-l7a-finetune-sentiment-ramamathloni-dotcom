@@ -19,9 +19,13 @@ def load_model(model_path: str = "model"):
     Defaults to local 'model' (your Lab 7A checkpoint). CI overrides via MODEL_PATH env.
     """
     # TODO: AutoModelForSequenceClassification.from_pretrained(model_path)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path)
+    
     # TODO: AutoTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    
     # TODO: return both
-    raise NotImplementedError
+    return model, tokenizer
 
 
 def run_against_set(adv_csv_path: str, model, tokenizer) -> pd.DataFrame:
@@ -32,11 +36,52 @@ def run_against_set(adv_csv_path: str, model, tokenizer) -> pd.DataFrame:
     Read label names from model.config.id2label — do not hard-code class names.
     """
     # TODO: read adv_csv_path with pandas
-    # TODO: for each row, tokenize + forward pass + softmax + argmax
-    # TODO: convert argmax index to label name via model.config.id2label
+    df = pd.read_csv(adv_csv_path)
+    
+    predicted_labels = []
+    predicted_probabilities = []
+    correct_flags = []
+    
+    # Set model to evaluation mode and disable gradient computation
+    model.eval()
+    with torch.no_grad():
+        # TODO: for each row, tokenize + forward pass + softmax + argmax
+        for _, row in df.iterrows():
+            text = str(row['text'])
+            expected = str(row['expected_label']).strip().lower()
+            
+            # Tokenize input text safely with truncation
+            inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+            
+            # Forward pass through the classifier
+            outputs = model(**inputs)
+            
+            # Calculate probabilities using Softmax and get the argmax index
+            probs = torch.softmax(outputs.logits, dim=-1).squeeze()
+            pred_id = torch.argmax(probs).item()
+            
+            # TODO: convert argmax index to label name via model.config.id2label
+            pred_label = str(model.config.id2label[pred_id]).strip().lower()
+            pred_prob = probs[pred_id].item()
+            
+            # Standardize label names to handle potential variations (e.g., pos vs positive)
+            if "pos" in pred_label: pred_label = "positive"
+            if "neg" in pred_label: pred_label = "negative"
+            
+            predicted_labels.append(pred_label)
+            predicted_probabilities.append(round(pred_prob, 4))
+            
+            # Verify if the model prediction matches the human ground truth
+            is_correct = 1 if pred_label == expected else 0
+            correct_flags.append(is_correct)
+            
     # TODO: build a results DataFrame with predicted_label, predicted_probability, correct
+    df['predicted_label'] = predicted_labels
+    df['predicted_probability'] = predicted_probabilities
+    df['correct'] = correct_flags
+    
     # TODO: return the DataFrame
-    raise NotImplementedError
+    return df
 
 
 def main() -> None:
